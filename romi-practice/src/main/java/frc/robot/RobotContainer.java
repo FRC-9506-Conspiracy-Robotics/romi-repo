@@ -4,10 +4,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
+import java.util.function.Supplier;
+
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.RomiDrivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,11 +23,16 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_romiDrivetrain);
 
+  private final CommandXboxController flounder = new CommandXboxController(0);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
   }
+
+  Supplier<Double> leftThumbPosition = () -> flounder.getLeftY();
+  Supplier<Double> rightThumbPosition = () -> flounder.getRightX();
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -33,7 +40,13 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    // simple program: left bumper backward, right bumper forward, a is to stop
+    m_romiDrivetrain.setDefaultCommand(m_romiDrivetrain.drive(
+      leftThumbPosition,
+      rightThumbPosition
+    ));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
