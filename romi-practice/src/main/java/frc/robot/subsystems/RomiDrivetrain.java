@@ -4,9 +4,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RomiDrivetrain extends SubsystemBase {
@@ -53,6 +56,16 @@ public class RomiDrivetrain extends SubsystemBase {
 
   public double getRightDistanceInch() {
     return m_rightEncoder.getDistance();
+  }
+
+  public Command drive(
+    Supplier<Double> leftThumbstickYAxis, 
+    Supplier<Double> rightThumbstickXAxis
+    ) {
+    
+    return run(() -> {
+      arcadeDrive(leftThumbstickYAxis.get(), rightThumbstickXAxis.get());
+    });
   }
 
   @Override
