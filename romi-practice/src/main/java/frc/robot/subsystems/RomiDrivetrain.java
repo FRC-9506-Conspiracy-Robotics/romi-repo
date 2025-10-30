@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RomiDrivetrain extends SubsystemBase {
@@ -64,4 +66,15 @@ public class RomiDrivetrain extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
+  public Command drive(
+    Supplier<Double> LeftThumbStickYAxis,
+    Supplier<Double> RightThumbStickXAxis
+  ){
+    return run(()-> {
+      arcadeDrive(LeftThumbStickYAxis.get(), RightThumbStickXAxis.get());
+    });
+  }
+
 }
+

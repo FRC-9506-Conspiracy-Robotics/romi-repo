@@ -3,8 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
-import edu.wpi.first.wpilibj.XboxController;
+import java.util.function.Supplier;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.RomiDrivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +21,11 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_romiDrivetrain);
 
+  private final CommandXboxController flounder = new CommandXboxController(0);
+
+  Supplier <Double> leftthumbstickposition = () -> flounder.getLeftY();
+  Supplier <Double> rightthumbstickposition = () -> flounder.getRightX();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
@@ -33,8 +38,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
-
+  private void configureButtonBindings() {
+    // simple program: left bumper backward, right bumper forward, a is to stop
+    m_romiDrivetrain.setDefaultCommand(m_romiDrivetrain.drive(leftthumbstickposition, rightthumbstickposition));
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
