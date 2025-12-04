@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.RomiDrivetrain;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -14,9 +17,17 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
+  DigitalOutput yellow_led = new DigitalOutput(3);
+  DigitalInput button_a = new DigitalInput(0);
+  DigitalInput button_b = new DigitalInput(1);
+
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+
+  private final RomiDrivetrain m_Drivetrain = new RomiDrivetrain();
+  int runs = 0;
+  double targetSpeed = .3;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -46,7 +57,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    yellow_led.set(false);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -54,6 +67,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    yellow_led.set(false);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -68,10 +82,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    yellow_led.set(true);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    runs = 0;
+    targetSpeed = .3;
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -79,7 +97,26 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if (runs < 70) {
+      m_Drivetrain.arcadeDrive(targetSpeed,0);
+    } else {
+      m_Drivetrain.arcadeDrive(0, 0);
+    }
+
+    runs = runs + 1;
+    targetSpeed = targetSpeed + .01;
+    
+    if (button_a.get()) {
+      yellow_led.set(true);
+    } else {
+      yellow_led.set(false);
+    }
+    if (button_b.get()){
+      yellow_led.set(false); 
+    }
+
+  }
 
   @Override
   public void testInit() {

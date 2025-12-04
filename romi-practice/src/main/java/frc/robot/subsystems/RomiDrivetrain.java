@@ -39,6 +39,8 @@ public class RomiDrivetrain extends SubsystemBase {
 
     // Invert right side since motor is flipped
     m_rightMotor.setInverted(true);
+    m_rightMotor.setSafetyEnabled(false);
+    m_leftMotor.setSafetyEnabled(false);
   }
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
@@ -46,8 +48,8 @@ public class RomiDrivetrain extends SubsystemBase {
   }
 
   public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
+    this.m_leftEncoder.reset();
+    this.m_rightEncoder.reset();
   }
 
   public double getLeftDistanceInch() {

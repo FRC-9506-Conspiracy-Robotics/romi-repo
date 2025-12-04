@@ -44,7 +44,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    m_romiDrivetrain.setDefaultCommand(m_romiDrivetrain.drive(leftThumbstickPosition, rightThumbstickPosition));
+    m_romiDrivetrain.setDefaultCommand(m_romiDrivetrain.drive(
+      leftThumbstickPosition, rightThumbstickPosition));
 
   }
 
