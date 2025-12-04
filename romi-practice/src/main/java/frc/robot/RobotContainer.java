@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final RomiDrivetrain m_romiDrivetrain = new RomiDrivetrain();
+  private final XboxController m_Controller = new XboxController(0);
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_romiDrivetrain);
 
@@ -33,7 +34,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    m_romiDrivetrain.setDefaultCommand(m_romiDrivetrain.getDefaultCommand(
+      () -> {return this.m_Controller.getLeftY();},
+      () -> {return -this.m_Controller.getRightTriggerAxis();}
+    ));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
